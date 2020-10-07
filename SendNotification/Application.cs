@@ -50,6 +50,13 @@ namespace SendNotification
 
         }
 
+        public async Task RunLocalData()
+        {
+            var notifications = GenerateListNotificationPush();
+
+            await ProcessNotification(notifications);
+        }
+
         #region Methods
         public async Task<byte[]> DownloadFile(string url)
         {
@@ -182,6 +189,44 @@ namespace SendNotification
             }
 
             return result.ToArray();
+        }
+
+
+        private IEnumerable<NotificationPush> GenerateListNotificationPush()
+        {
+            var result = new List<NotificationPush>();
+            for (int i = 1; i < 200001; i++)
+            {
+                var item = new NotificationPush()
+                {
+                    to = $"cwD6fF4RRH2XhZvy1HMtKt:APA91bFoLm8ZX5t4CsTbWk5xNXvJ62Lp9VX3Jagde4qJh_bdxcRmSBHQdiOvilG5-30_SKTf6s1m-4k-WJrB04l_3YLehYPfpYKjj542Qrdv4hDQUSimjE2Nf91khuwhmnSNSyszVCD-{i}",
+                    uuid = GenerateNotificationId(),
+                    id_sequencial = "060",
+                    application_code = "001",
+                    campaign_id = "001",
+                    token = "AAAArdy8rx8:APA91bFIc7SAxEUNWQZacbv3xyQ36_kRFyIGmf99Feftv-PKCarXfp4MTb2yrRqrdLhAizwSfP8Dg1ToZVbO30Rzz4Ji9Dpa7T8vGoXETbZpg-1Kz6Vs5s3Ozo7PBGg0IH3bRVxlPOXk",
+                    data = new { rp_sequential_id = "060", rp_notification_id = "060", other_parameter = "Developer" },
+                    notification = new NotificationModel
+                    {
+                        title = "Test PubSub",
+                        body = "Mensaje Pub Sub para probar la distribucion de las notificaciones de manera masiva en un azure function"
+                    }
+                };
+                result.Add(item);
+            }
+
+            return result.ToArray();
+        }
+
+        private string GenerateUUID()
+        {
+            long ticks = DateTime.Now.Ticks;
+            byte[] bytes = BitConverter.GetBytes(ticks);
+            string id = Convert.ToBase64String(bytes)
+                                    .Replace('+', '_')
+                                    .Replace('/', '-')
+                                    .TrimEnd('=');
+            return id;
         }
 
         private string GenerateNotificationId()

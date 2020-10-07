@@ -12,7 +12,7 @@ namespace SendNotification
         {
             RegisterServices();
             IServiceScope scope = _serviceProvider.CreateScope();
-            await scope.ServiceProvider.GetRequiredService<Application>().Run();
+            await scope.ServiceProvider.GetRequiredService<Application>().RunLocalData();
             DisposeServices();
         }
 
